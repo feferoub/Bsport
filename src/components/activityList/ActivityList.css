@@ -1,0 +1,24 @@
+.gridContainer{
+	display : grid;
+    background-color: #c1ced2;
+    padding-bottom: 10px;
+}
+.activity-header{
+	color: #4f565c;
+ 	font-size: 1.2em;
+ 	text-align: center;
+}
+.activity-wrapper{
+	width: calc(80%);
+	margin-left:9%;
+	margin-top : 10px;
+	margin-bottom: 10px;
+	padding:5px;
+	background-color:white; 
+	color:#4f565c;
+	font-family:"Montserrat", sans-serif;
+
+}
+
+
+
