@@ -1,5 +1,6 @@
 import React from "react"
 import "./ActivityList.css"
+import moment from 'moment';
 
 
 // Le composant ActivityList contient la liste des activités. Celles de la semaine courante lors du chargement,
@@ -11,7 +12,10 @@ class ActivityList extends React.Component {
 	// nom. Il est chargé une seule fois avant la construction du monposant.
 	state = {
 				activitiesDict : {},
-				activities : []
+				activities : [],
+				currentDay : moment().format("D"),
+      			currentDayPosition: moment().isoWeekday(),
+      			currentYearMonth : moment().format("YYYY") + "-" + moment().format("MM")
 			}
 
 	constructor(props){
@@ -33,14 +37,14 @@ class ActivityList extends React.Component {
 		if (displayInfo === "weekSelection") {
 			newActivities = [	
 								<h1 key="0 "className="activity-header">Activités de la semaine 
-								du {(parseInt(this.props.currentDay) - parseInt(this.props.currentDayPosition)+1).toString()}
+								du {(parseInt(this.state.currentDay) - parseInt(this.state.currentDayPosition)+1).toString()}
 								</h1>
 							];
 		}
 		if (displayInfo === "daySelection") {
 			newActivities = [<h1 key="0 " className="activity-header">Activités du {daySelected}</h1>];
 		}
-		
+
 		for(let i=0; i<requestResult.length; i++){
 			newActivities.push(
 				<div key = {i*100} className="activity-wrapper">
@@ -103,18 +107,19 @@ class ActivityList extends React.Component {
 	// pour obtenir la semaine courante.
 	componentWillMount() {
 		this.getDictionnary();
-		fetch('https://bsport.io/api/v1/offer/?min_date=2019-08-'+(parseInt(this.props.currentDay) - parseInt(this.props.currentDayPosition)+1).toString()+
-			'&max_date=2019-08-' + (parseInt(this.props.currentDay) + parseInt(this.props.currentDayPosition) - 6).toString() +'&page_size=50')
+		fetch('https://bsport.io/api/v1/offer/?min_date=' + this.state.currentYearMonth +'-'+(parseInt(this.state.currentDay) - parseInt(this.state.currentDayPosition)+1).toString()+
+			'&max_date=' + this.state.currentYearMonth +'-'+ (parseInt(this.state.currentDay) + parseInt(this.state.currentDayPosition) - 6).toString())
 			.then(res => res.json())
 			.then(json => {
-				this.displayActivities(json["results"],"weekSelection",parseInt(this.props.currentDay));
+				this.displayActivities(json["results"],"weekSelection",parseInt(this.state.currentDay));
 		})
 	}
 
 	// Lors d'un click, appelle displayActivities pour changer la liste des activités précédentes et les
 	// remplacer par celles du jour selectionné
 	componentWillReceiveProps(newProps) {
-		fetch('https://bsport.io/api/v1/offer/?min_date=2019-08-'+(newProps.selectedDay).toString()+'&max_date=2019-08-' + (newProps.selectedDay).toString() +'&page_size=50')
+		fetch('https://bsport.io/api/v1/offer/?min_date=' + this.state.currentYearMonth +'-'+(newProps.selectedDay).toString()
+			+'&max_date=' + this.state.currentYearMonth +'-'+ (newProps.selectedDay).toString())
 			.then(res => res.json())
 			.then(json => {
 				this.displayActivities(json["results"],"daySelection",newProps.selectedDay);

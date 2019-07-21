@@ -8,8 +8,6 @@ class App extends React.Component {
 
   state = {
     selectedDay : moment().format("D"),
-    currentDay : moment().format("D"),
-    currentDayPosition: moment().isoWeekday()
   }
 
 
@@ -20,10 +18,7 @@ class App extends React.Component {
 
   onDayClick = (e,day) => {
     this.setState(
-      {selectedDay : day,
-      currentDay : moment().format("D"),
-      currentDayPosition: moment().isoWeekday()
-      }
+      {selectedDay : day}
     );
   }
 
@@ -31,9 +26,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Calendrier onDayClick={(e, day) => this.onDayClick(e,day)} />
-        <ActivityList selectedDay = {this.state.selectedDay} 
-                      currentDay = {this.state.currentDay} 
-                      currentDayPosition = {this.state.currentDayPosition}/>
+        <ActivityList selectedDay = {this.state.selectedDay} />
       </div>
     );
   }
